@@ -10,7 +10,7 @@ class User(models.Model):
     phone = models.CharField(max_length=20)
     password = models.CharField(max_length=50)
     about = models.JSONField()
-    profileImg =  models.ImageField(upload_to='profile_images/')
+    profileImg =  models.ImageField(upload_to='profile_images/', null= True)
 
     def set_password(self, raw_password):
        self.password = make_password(raw_password)
