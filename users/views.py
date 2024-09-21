@@ -68,22 +68,6 @@ def Login(request):
             }, status=status.HTTP_401_UNAUTHORIZED)
     
     except ObjectDoesNotExist:
-        createUserDict = {
-            "email" : emaildata,
-            "password" : password,
-            "phone" : "03904543534",
-            "about" : {
-                "about" : "hello boss"
-            },
-        }
-        serializer = UserSerializer(data=createUserDict)
-        if serializer.is_valid():
-            userData = serializer.save()
-
-            #Generate JWT token for the newly created user
-            refresh = RefreshToken.for_user(userData)
-            access_token = str(refresh.access_token)
-            return Response({
-            'error': 'User not found with this email So I have Created New'
-            })
-        
+        return Response({
+                'error': 'User With this email does not exists'
+            }, status=status.HTTP_401_UNAUTHORIZED)
