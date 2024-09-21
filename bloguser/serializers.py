@@ -6,7 +6,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['id', 'name', 'email', 'phone', 'password', 'about', 'profileImg']  # Only include these fields
         extra_kwargs = {
             'password': {'write_only': True}  # Exclude password from the response but allow it during creation
         }

@@ -1,16 +1,19 @@
 from django.shortcuts import render
 from . models import User
 from . serializers import UserSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Create your views here.
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def AllUsers(request):
+   
     ai = User.objects.all()
 
     serializer = UserSerializer(ai, many = True)
@@ -18,6 +21,7 @@ def AllUsers(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def Create_User(request):
     serializer = UserSerializer(data=request.data)
 
@@ -38,6 +42,7 @@ def Create_User(request):
     return Response(serializer.errors)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def Login(request):
     requestData = request.data
     emaildata = requestData.get("email")
@@ -71,3 +76,13 @@ def Login(request):
         return Response({
                 'error': 'User With this email does not exists'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def SingleUser(request, pk=None):
+   
+    singleUserData = User.objects.get(id=pk)
+
+    serializer = UserSerializer(singleUserData)
+
+    return Response(serializer.data)
