@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 @api_view(['GET'])
@@ -81,8 +82,8 @@ def Login(request):
 @permission_classes([IsAuthenticated])
 def SingleUser(request, pk=None):
    
-    singleUserData = User.objects.get(id=pk)
-
-    serializer = UserSerializer(singleUserData)
+    # singleUserData = User.objects.get(id=pk)
+    user = get_object_or_404(User.objects.prefetch_related('blogs'), id=pk)  # Prefetch blogs for the user
+    serializer = UserSerializer(user)
 
     return Response(serializer.data)

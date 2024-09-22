@@ -8,4 +8,4 @@ class Blog(models.Model):
     title = models.TextField()
     description = models.TextField()
     blogimg = models.ImageField(upload_to='blog_images/', null=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Foreign key to custom user
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs')  # Foreign key to custom user

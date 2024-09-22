@@ -1,13 +1,15 @@
 from rest_framework import serializers
 from . models import User
+from blog.serializers import BlogSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(format='hex', read_only=True)
+    blogs = BlogSerializer(many=True, read_only=True)  # Include the related blogs
 
     class Meta:
         model = User
         # fields = '__all__'
-        fields = ['id', 'name', 'email', 'phone', 'password', 'about', 'profileImg']  # Only include these fields
+        fields = ['id', 'name', 'email', 'phone', 'password', 'about', 'profileImg', 'blogs']  # Only include these fields
         extra_kwargs = {
             'password': {'write_only': True}  # Exclude password from the response but allow it during creation
         }
