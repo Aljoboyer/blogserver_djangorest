@@ -9,3 +9,9 @@ class Blog(models.Model):
     description = models.TextField()
     blogimg = models.ImageField(upload_to='blog_images/', null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blogs')  # Foreign key to custom user
+
+class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    commenttext = models.TextField()
+    comments = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='comments')
+    commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='commenter')

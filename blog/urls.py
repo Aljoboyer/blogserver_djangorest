@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('publish/', views.PublishBlog),
+    path('addcomment/', views.AddComment),
 ]
