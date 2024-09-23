@@ -39,6 +39,18 @@ def AddComment(request):
     return Response(serializer.errors)
 
 
+# Create your views here.
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def BlogList(request):
+   
+    blg = Blog.objects.all()
+
+    serializer = BlogSerializer(blg, many = True, fields=['id', 'title', 'description', 'blogimg', 'user'])
+
+    return Response(serializer.data)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def SingleBlog(request, pk=None):

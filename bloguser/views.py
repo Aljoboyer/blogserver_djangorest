@@ -17,7 +17,7 @@ def AllUsers(request):
    
     ai = User.objects.all()
 
-    serializer = UserSerializer(ai, many = True)
+    serializer = UserSerializer(ai, many = True, fields=['id', 'name', 'email', 'phone', 'profileImg'])
 
     return Response(serializer.data)
 
@@ -56,7 +56,7 @@ def Login(request):
         # Check if the provided password matches the hashed password
         if check_password(password, existsUser.password):
             # Password is correct, serialize the user data
-            serializer = UserSerializer(existsUser)
+            serializer = UserSerializer(existsUser, fields=['id', 'name', 'email', 'phone', 'profileImg'])
 
             #Generate JWT token for the newly created user
             refresh = RefreshToken.for_user(existsUser)
