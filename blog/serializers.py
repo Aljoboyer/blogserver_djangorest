@@ -15,8 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(format='hex', read_only=True)
-    # commenter = UserSerializer(read_only=False) 
-    commenter = serializers.PrimaryKeyRelatedField(read_only=True)  # Make commenter read-only
+    commenter = UserSerializer(read_only=True) 
 
 
     class Meta:
