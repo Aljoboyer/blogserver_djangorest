@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.core.files.storage import default_storage
 
 # Create your views here.
 @api_view(['POST'])
@@ -76,13 +77,14 @@ def UpdateBlog(request, pk=None):
     
     return Response(serializer.errors)
 
-
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def DeleteBlog(request, pk=None):
     try:
         blog = Blog.objects.get(pk=pk)  # Retrieve the blog instance
-        
+        if blog.blogimg:
+            if default_storage.exists(blog.blogimg.path):
+                default_storage.delete(blog.blogimg.path) 
         blog.delete()  # Delete the instance
         return Response({'msg': 'Blog deleted successfully'}, status=200)
     except Blog.DoesNotExist:
