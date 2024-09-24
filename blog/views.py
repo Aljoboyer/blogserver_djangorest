@@ -13,7 +13,8 @@ def PublishBlog(request):
     serializer = BlogSerializer(data=request.data)
 
     if serializer.is_valid():
-        blogdata = serializer.save()
+        # blogdata = serializer.save()
+        serializer.save(user=request.user)
 
         return Response({
             'msg': 'Blog created successfully',

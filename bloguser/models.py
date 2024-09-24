@@ -1,24 +1,8 @@
-# from django.db import models
-# import uuid
-# from django.contrib.auth.hashers import make_password
-
-# # Create your models here.
-# class User(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     name = models.CharField(max_length=50)
-#     email = models.EmailField(max_length=50, unique=True)
-#     phone = models.CharField(max_length=20)
-#     password = models.CharField(max_length=50)
-#     about = models.JSONField()
-#     profileImg =  models.ImageField(upload_to='profile_images/', null= True)
-    
-#     def set_password(self, raw_password):
-#        self.password = make_password(raw_password)
-
 from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
+from datetime import datetime
 
 # Custom user manager to handle user creation
 class CustomUserManager(BaseUserManager):
@@ -55,6 +39,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+   # Timestamps
+    createdAt = models.DateTimeField(auto_now_add=True)  # Automatically set when created
+    updatedAt = models.DateTimeField(auto_now=True)     # Automatically updated when modified
+    
     USERNAME_FIELD = 'email'  # Email will be used for authentication
     REQUIRED_FIELDS = ['name']  # Fields that are required besides the email
 

@@ -4,7 +4,7 @@ from . models import Blog, Comment
 # Register your models here.
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'description', 'blogimg', 'user']
+    list_display = ['id', 'title', 'description', 'blogimg', 'user', 'createdAt', 'updatedAt']
 
 # Register your models here.
 @admin.register(Comment)
