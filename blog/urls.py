@@ -6,4 +6,6 @@ urlpatterns = [
     path('addcomment/', views.AddComment),
     path('list/', views.BlogList),
     path('single/<uuid:pk>', views.SingleBlog),
+    path('update/<uuid:pk>', views.UpdateBlog),
+    path('delete/<uuid:pk>', views.DeleteBlog),
 ]

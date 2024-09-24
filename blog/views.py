@@ -13,7 +13,7 @@ def PublishBlog(request):
     serializer = BlogSerializer(data=request.data)
 
     if serializer.is_valid():
-        # blogdata = serializer.save()
+        # blogValata = serializer.save()
         serializer.save(user=request.user)
 
         return Response({
@@ -29,7 +29,7 @@ def AddComment(request):
     serializer = CommentSerializer(data=request.data)
 
     if serializer.is_valid():
-        # blogdata = serializer.save()
+        # blogValata = serializer.save()
         serializer.save(commenter=request.user)
 
         return Response({
@@ -61,3 +61,29 @@ def SingleBlog(request, pk=None):
     serializer = BlogSerializer(blog)
 
     return Response(serializer.data)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def UpdateBlog(request, pk=None):
+    id = pk
+    blogVal = Blog.objects.get(pk=id)
+
+    serializer = BlogSerializer(blogVal, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'msg': 'Blog Data Updated'})
+    
+    return Response(serializer.errors)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def DeleteBlog(request, pk=None):
+    try:
+        blog = Blog.objects.get(pk=pk)  # Retrieve the blog instance
+        
+        blog.delete()  # Delete the instance
+        return Response({'msg': 'Blog deleted successfully'}, status=200)
+    except Blog.DoesNotExist:
+        return Response({'error': 'Blog not found'}, status=404)
