@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bloguser',
     'rest_framework_simplejwt',
     'blog',
+    'blogsetting',
 ]
 
 MIDDLEWARE = [
