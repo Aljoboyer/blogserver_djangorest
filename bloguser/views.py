@@ -9,6 +9,8 @@ from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
+from blogsetting.models import BlogSettings
+from blogsetting.serializers import BlogSettingSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -28,6 +30,14 @@ def Create_User(request):
 
     if serializer.is_valid():
         userData = serializer.save()
+        print('userdata', userData)
+
+        if userData:
+            settingsJson = {"blogcount": 0, "paymentVerified": False}
+            serializer2 = BlogSettingSerializer(data=settingsJson)
+
+            if serializer2.is_valid():
+                serializer2.save(user=userData)
 
        #Generate JWT token for the newly created user
         refresh = RefreshToken.for_user(userData)

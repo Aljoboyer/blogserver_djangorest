@@ -6,23 +6,44 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import default_storage
+from blogsetting.models import BlogSettings
+from blogsetting.serializers import BlogSettingSerializer
+from bloguser.models import User
+from bloguser.serializers import UserSerializer
 
 # Create your views here.
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PublishBlog(request):
-    serializer = BlogSerializer(data=request.data)
+    userid = request.data["user"]
+    usersetting = BlogSettings.objects.get(user=userid)
 
-    if serializer.is_valid():
-        # blogValata = serializer.save()
-        serializer.save(user=request.user)
+    userserial = BlogSettingSerializer(usersetting)
 
+    print('userserial===>', userserial)
+
+    # serializer = BlogSerializer(data=request.data)
+
+    print('usersetting===>', usersetting)
+
+    if userserial.is_valid():
         return Response({
             'msg': 'Blog created successfully',
-            'blog': serializer.data,
+            # 'blog': serializer.data,
+            "settings": userserial.data
         }, status=201)
+        
+    # if serializer.is_valid():
+    #     # blogValata = serializer.save()
+    #     serializer.save(user=request.user)
+
+    #     return Response({
+    #         'msg': 'Blog created successfully',
+    #         'blog': serializer.data,
+    #         "settings": userserial.data
+    #     }, status=201)
     
-    return Response(serializer.errors)
+    # return Response(serializer.errors)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -39,7 +60,6 @@ def AddComment(request):
         }, status=201)
     
     return Response(serializer.errors)
-
 
 # Create your views here.
 @api_view(['GET'])
