@@ -12,38 +12,79 @@ from bloguser.models import User
 from bloguser.serializers import UserSerializer
 
 # Create your views here.
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def PublishBlog(request):
+#     userid = request.data["user"]
+#     blogsetting = BlogSettings.objects.get(user=userid)
+
+#     blogSettignSerial = BlogSettingSerializer(blogsetting)
+
+#     serializer = BlogSerializer(data=request.data)
+    
+#     if blogSettignSerial.data["paymentVerified"] == True:
+#         if serializer.is_valid():
+            
+#             blogdata = serializer.save(user=request.user)
+            
+#             if blogdata:
+#                 blogCountIncrease = blogSettignSerial.data["blogcount"] + 1
+
+#                 settingsJson = {"blogcount": blogCountIncrease}
+
+#                 settingSerializer = BlogSettingSerializer(blogSettignSerial.data, data=settingsJson, partial=True)
+
+#                 if settingSerializer.is_valid():
+#                     settingSerializer.save()
+#                     return Response({
+#                         'msg': 'Blog created successfully',
+#                         'blog': serializer.data,
+#                     }, status=201)
+                
+#         return Response(serializer.errors)
+#     return Response({"msg" : "Payment Is not Verified"})
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PublishBlog(request):
     userid = request.data["user"]
-    usersetting = BlogSettings.objects.get(user=userid)
-
-    userserial = BlogSettingSerializer(usersetting)
-
-    print('userserial===>', userserial)
-
-    # serializer = BlogSerializer(data=request.data)
-
-    print('usersetting===>', usersetting)
-
-    if userserial.is_valid():
-        return Response({
-            'msg': 'Blog created successfully',
-            # 'blog': serializer.data,
-            "settings": userserial.data
-        }, status=201)
-        
-    # if serializer.is_valid():
-    #     # blogValata = serializer.save()
-    #     serializer.save(user=request.user)
-
-    #     return Response({
-    #         'msg': 'Blog created successfully',
-    #         'blog': serializer.data,
-    #         "settings": userserial.data
-    #     }, status=201)
     
-    # return Response(serializer.errors)
+    # Get the BlogSettings instance for the given user
+    blogsetting = BlogSettings.objects.get(user=userid)
+
+    # Serialize the blog settings
+    blogSettingSerial = BlogSettingSerializer(blogsetting)
+
+    # Create a blog serializer with the data from the request
+    serializer = BlogSerializer(data=request.data)
+    
+    # Check if payment is verified
+    if blogSettingSerial.data["paymentVerified"]:
+        if serializer.is_valid():
+            # Save the blog, associating it with the current authenticated user
+            blogdata = serializer.save(user=request.user)
+            
+            if blogdata:
+                # Increment the blog count
+                blogCountIncrease = blogsetting.blogcount + 1  # Access blogcount from the model instance
+                
+                # Update the BlogSettings instance with the new blog count
+                settingsJson = {"blogcount": blogCountIncrease}
+
+                # Serialize the updated BlogSettings instance with partial updates
+                settingSerializer = BlogSettingSerializer(blogsetting, data=settingsJson, partial=True)
+
+                if settingSerializer.is_valid():
+                    settingSerializer.save()  # Save the updated blog count
+                    return Response({
+                        'msg': 'Blog created successfully',
+                        'blog': serializer.data,
+                    }, status=201)
+                
+        return Response(serializer.errors)
+    
+    return Response({"msg": "Payment is not verified"})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
