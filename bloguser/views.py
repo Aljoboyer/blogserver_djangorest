@@ -9,7 +9,6 @@ from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from blogsetting.models import BlogSettings
 from blogsetting.serializers import BlogSettingSerializer
 
 # Create your views here.

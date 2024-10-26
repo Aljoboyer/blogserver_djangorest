@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'blog',
     'blogsetting',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -156,3 +158,13 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',  # This is what will be used in the payload
 
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
